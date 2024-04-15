@@ -78,13 +78,27 @@ int main(int argc, char **argv)
 {
 	t_data	*data;
 
+	data = ft_calloc(1, sizeof(t_data));
+	if (!data)
+		return (EXIT_FAILURE);
 	if (argc < 5 || argc > 6)
+	{
+		free(data);
 		return (EXIT_FAILURE);
+	}
 	if (parsing_argv(argc, argv) == EXIT_FAILURE)
+	{
+		free(data);
 		return (EXIT_FAILURE);
-	if (!init_philo(data, argv, argc) == EXIT_FAILURE)
+	}
+	if (init_philo(data, argv, argc) == EXIT_FAILURE)
+	{
+		free(data);
 		return (EXIT_FAILURE);
+	}
 	if (data->philo->philo_nbr == 1)
+	{
+		free(data);
 		return (for_one(data));
-	
+	}
 }

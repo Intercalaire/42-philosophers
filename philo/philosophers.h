@@ -52,5 +52,10 @@ void	*philosopher(void *arg);
 long	ft_atol(const char *nptr);
 void	*ft_calloc( size_t nmemb, size_t size);
 int		init_philo(t_data *data, char **argv, int argc);
+int		for_one(t_data *data);
+int		get_time(void);
+void	free_tab(int *tab);
+int		parsing_argv(int argc, char **argv);
+
 
 #endif
