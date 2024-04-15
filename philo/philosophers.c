@@ -71,6 +71,7 @@ int	parsing_argv(int argc, char **argv)
 			return (free_tab(tab), EXIT_FAILURE);
 		i++;
 	}
+	return(EXIT_SUCCESS);
 }
 
 int main(int argc, char **argv)
@@ -79,7 +80,8 @@ int main(int argc, char **argv)
 
 	if (argc < 5 || argc > 6)
 		return (EXIT_FAILURE);
-	parsing_argv(argc, argv);
+	if (parsing_argv(argc, argv) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 	if (!init_philo(data, argv, argc) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	if (data->philo->philo_nbr == 1)
