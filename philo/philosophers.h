@@ -13,12 +13,15 @@
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/time.h>
-#include <limits.h>
+# include <unistd.h>
+# include <pthread.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <limits.h>
+# include <sys/time.h>
+# include <stdint.h>
+# include <stdbool.h>
 
 //	philo_msg
 # define TAKE_FORKS "has taken a fork"
@@ -53,9 +56,9 @@ long	ft_atol(const char *nptr);
 void	*ft_calloc( size_t nmemb, size_t size);
 int		init_philo(t_data *data, char **argv, int argc);
 int		for_one(t_data *data);
-int		get_time(void);
-void	free_tab(int *tab);
+u_int64_t		get_time(void);
 int		parsing_argv(int argc, char **argv);
+int		free_all(t_data *data);
 
 
 #endif

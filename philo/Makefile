@@ -18,7 +18,11 @@ RM = rm -f
 CLEAR = clear
 
 # Files
-SRC	= philosophers.c\
+SRC	= philosophers.c \
+		utils.c \
+		init.c \
+		utils_2.c \
+		data_clear.c \
 
 OBJ	= $(SRC:.c=.o)
 

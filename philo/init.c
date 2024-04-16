@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-void init_philo(t_data *data, char **argv, int argc)
+int init_philo(t_data *data, char **argv, int argc)
 {
 	data->philo->philo_nbr = ft_atol(argv[1]);
 	data->last_meal = get_time();
@@ -21,6 +21,7 @@ void init_philo(t_data *data, char **argv, int argc)
 	data->philo->time_to_die = ft_atol(argv[2]);
 	data->philo->time_to_eat = ft_atol(argv[3]);
 	data->philo->time_to_sleep = ft_atol(argv[4]);
+	printf("ici");
 	data->nb_meals = (argc == 6) ? ft_atol(argv[5]) : -1;
 	data->died = 0;
 	data->start_time = get_time();
@@ -34,4 +35,13 @@ void init_philo(t_data *data, char **argv, int argc)
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
+}
+u_int64_t get_time(void)
+{
+	struct timeval	tv;
+	u_int64_t		time_in_ms;
+
+	gettimeofday(&tv, NULL);
+	time_in_ms = (u_int64_t)tv.tv_sec * 1000 + (u_int64_t)tv.tv_usec / 1000;
+	return (time_in_ms);
 }

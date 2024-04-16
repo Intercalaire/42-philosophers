@@ -12,15 +12,15 @@
 
 #include "philosophers.h"
 
-int	for_one(t_data *data)
+int for_one(t_data *data)
 {
 	data->start_time = get_time();
 	while (1)
 	{
-		if (get_time() - data->last_meal > data->philo->time_to_die)
+		if (data->start_time - data->last_meal > data->philo->time_to_die)
 		{
-			printf("%d %d %s\n", get_time() - data->start_time, data->philo->philo_nbr, DIED);
-			return (EXIT_FAILURE);
+			printf("%lu %d %s\n", get_time() - data->start_time, data->philo->philo_nbr, DIED);
+			return (free_all(data));
 		}
 	}
 	return (EXIT_SUCCESS);
@@ -44,61 +44,44 @@ int	for_one(t_data *data)
 // 	}
 // 	return (NULL);
 // }
-void free_tab(int *tab)
-{
-	int	i;
 
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
+static int free_tab(int *tab)
+{
 	free(tab);
+	return (EXIT_FAILURE);
 }
 
-int	parsing_argv(int argc, char **argv)
+int parsing_argv(int argc, char **argv)
 {
-	int	i;
-	int	*tab;
+	int i;
+	int *tab;
 
 	i = 0;
-	tab = ft_calloc((argc - 1) , sizeof(int));
-	while(argv[i])
+	tab = (int *)ft_calloc((argc - 1), sizeof(int *));
+	while (argv[i])
 	{
 		tab[i] = ft_atol(argv[i]);
-		if (tab[i] > INT_MAX  || tab[i] < INT_MIN)
-			return (free_tab(tab), EXIT_FAILURE);
+		if (tab[i] > INT_MAX || tab[i] < INT_MIN)
+			return (free_tab(tab));
 		i++;
 	}
-	return(EXIT_SUCCESS);
+	return (EXIT_SUCCESS);
 }
 
 int main(int argc, char **argv)
 {
-	t_data	*data;
+	t_data *data;
 
 	data = ft_calloc(1, sizeof(t_data));
 	if (!data)
 		return (EXIT_FAILURE);
 	if (argc < 5 || argc > 6)
-	{
-		free(data);
-		return (EXIT_FAILURE);
-	}
+		return (free(data), EXIT_FAILURE);
 	if (parsing_argv(argc, argv) == EXIT_FAILURE)
-	{
-		free(data);
-		return (EXIT_FAILURE);
-	}
+		return (free(data), EXIT_FAILURE);
 	if (init_philo(data, argv, argc) == EXIT_FAILURE)
-	{
-		free(data);
-		return (EXIT_FAILURE);
-	}
+		return (free(data), EXIT_FAILURE);
 	if (data->philo->philo_nbr == 1)
-	{
-		free(data);
 		return (for_one(data));
-	}
+	return (EXIT_SUCCESS);
 }
