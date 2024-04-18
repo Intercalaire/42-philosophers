@@ -43,15 +43,20 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int				nb_meals; // number of meals
+	bool			keep_iterating; // keep iterating
 	int				last_meal; // time of the last meal
 	int				eat_count; // number of meals eaten
 	int				is_eating; // is the philosopher eating
 	int				died; // is the philosopher dead
 	int	start_time; // start time
+	int				nb_philos; // number of philosophers
 	t_philo			*philo; // philosopher
+	pthread_t		monit_all_alive; // monitor all alive
+	pthread_t		*philo_ths; // philosopher threads
 }				t_data;
 
 void	*philosopher(void *arg);
+void	*philo_routine(void *arg);
 long	ft_atol(const char *nptr);
 void	*ft_calloc( size_t nmemb, size_t size);
 int		init_philo(t_data *data, char **argv, int argc);

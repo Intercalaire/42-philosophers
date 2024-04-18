@@ -68,6 +68,23 @@ int parsing_argv(int argc, char **argv)
 	return (EXIT_SUCCESS);
 }
 
+static void create_philo_threads(t_data *data)
+{
+	int	i;
+
+	if (!data->philo_ths)
+		return ;
+
+	i = 0;
+	data->philo_ths = malloc(sizeof(pthread_t) * data->nb_philos);
+	while (i < data->nb_philos)
+	{
+		if (pthread_create(&data->philo_ths[i], NULL, philo_routine, &data->philo[i]))
+			exit(1);
+		i++;
+	}
+}
+
 int main(int argc, char **argv)
 {
 	t_data *data;
@@ -83,5 +100,7 @@ int main(int argc, char **argv)
 		return (free(data), EXIT_FAILURE);
 	if (data->philo->philo_nbr == 1)
 		return (for_one(data));
-	return (EXIT_SUCCESS);
+	create_philo_threads(&data);
+	pthread_create(&data->monit_all_alive, NULL, monitor_all_alive, &data);
+
 }
