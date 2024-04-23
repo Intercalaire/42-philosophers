@@ -30,7 +30,7 @@ int for_one(t_data *data)
 // {
 // 	t_philo		*philo;
 // 	pthread_t	monitor;
-
+ 
 // 	philo = (t_philo *)arg;
 // 	philo->last_meal = get_time();
 // 	pthread_create(&monitor, NULL, &monitor_philo, philo);
@@ -40,7 +40,7 @@ int for_one(t_data *data)
 // 		take_forks(philo);
 // 		eat(philo);
 // 		drop_forks(philo);
-// 		sleep_philo(philo);
+// 		sleep_philo(philo); 
 // 	}
 // 	return (NULL);
 // }
@@ -100,7 +100,5 @@ int main(int argc, char **argv)
 		return (free(data), EXIT_FAILURE);
 	if (data->philo->philo_nbr == 1)
 		return (for_one(data));
-	create_philo_threads(&data);
-	pthread_create(&data->monit_all_alive, NULL, monitor_all_alive, &data);
-
+	pthread_create(data->philo, NULL, philo_routine, data->philo);
 }

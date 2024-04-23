@@ -51,7 +51,6 @@ typedef struct s_data
 	int	start_time; // start time
 	int				nb_philos; // number of philosophers
 	t_philo			*philo; // philosopher
-	pthread_t		monit_all_alive; // monitor all alive
 	pthread_t		*philo_ths; // philosopher threads
 }				t_data;
 
