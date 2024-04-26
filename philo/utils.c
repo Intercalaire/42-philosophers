@@ -27,7 +27,7 @@ static	int	ft_isdigit(int c)
 static int	ft_isspace(char c)
 {
 	if ((c >= 9 && c <= 13) || c == 32)
-		return (8192);
+		return (1);
 	return (0);
 }
 

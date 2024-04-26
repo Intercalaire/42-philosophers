@@ -12,54 +12,69 @@
 
 #include "philosophers.h"
 
-void	*philo_routine(void *arg)
+// static void	messages(char *str, t_data *data)
+// {
+// 	int	time;
+
+// 	pthread_mutex_lock(&data->write);
+// 	time = 0;
+// 	ft_usleep(data->start_time + 1);
+// 	if (ft_strcmp(DIED, str) == 0 && data->died == 0)
+// 	{
+// 		printf("%d %d %s\n", time, data->nb_meals, str);
+// 		data->died = 1;
+// 	}
+// 	if (!data->died)
+// 		printf("%d %d %s\n", time, data->nb_meals, str);
+// 	pthread_mutex_unlock(&data->write);
+// }
+
+static void	ft_taken_a_fork(t_data *data)
 {
-	t_philo *philosopher = (t_philo *)arg;
-	t_data *data = philosopher->data;
+	pthread_mutex_lock(data->philo->right_fork);
+	printf(TAKE_FORKS);
+	pthread_mutex_unlock(data->philo->left_fork);
+	printf(TAKE_FORKS);
+}
+static void	drop_forks(t_data *data)
+{
+	pthread_mutex_unlock(data->philo->left_fork);
+	pthread_mutex_unlock(data->philo->right_fork);
+	printf(" drop taken a fork\n");;
+	ft_usleep(data->philo->time_to_sleep);
+}
 
-	while (data->keep_iterating)
+static void	ft_is_thinking(t_data *data)
+{
+	pthread_mutex_lock(&data->philo->m_death);
+	printf("%d %d %s\n", data->start_time, data->philo->philo_nbr, THINKING);
+	pthread_mutex_unlock(&data->philo->m_death);
+}
+
+static void	ft_is_eating(t_data *data)
+{
+	ft_taken_a_fork(data);
+	pthread_mutex_lock(&data->lock);
+	data->is_eating = 1;
+	data->philo->time_to_die = data->philo->time_to_die;
+	printf(EATING"\n");
+	data->eat_count++;
+	ft_usleep(data->philo->time_to_eat);
+	data->philo->time_to_die = 0;
+	pthread_mutex_unlock(&data->lock);
+	drop_forks(data);
+}
+
+void	*ft_routine(t_data *data)
+{
+	while (1)
 	{
-		// Is thinking
-		change_philo_state(philosopher, THINK);
-		print_philo_action(philosopher, "is thinking");
-		sleep_for(data->sleep_time);
-
-		// Take a fork
-		pthread_mutex_lock(philosopher->left_fork);
-		change_philo_state(philosopher, EATING);
-		print_philo_action(philosopher, "has taken a fork");
-		pthread_mutex_lock(philosopher->right_fork);
-		print_philo_action(philosopher, "has taken a fork");
-
-		// Is eating
-		print_philo_action(philosopher, "is eating");
-		pthread_mutex_lock(&philosopher->mut_last_eat_time);
-		philosopher->last_eat_time = get_time_in_ms();
-		pthread_mutex_unlock(&philosopher->mut_last_eat_time);
-		sleep_for(data->eat_time);
-
-		// Put down the forks
-		pthread_mutex_unlock(philosopher->left_fork);
-		pthread_mutex_unlock(philosopher->right_fork);
-
-		// Check if philosopher is full
-		pthread_mutex_lock(&philosopher->mut_meals_eaten);
-		philosopher->meals_eaten++;
-		if (philosopher->meals_eaten >= data->nb_meals)
-		{
-			change_philo_state(philosopher, FULL);
-			printf("Philosopher %d is full\n", philosopher->id);
-			data->nb_full_p++;
-			pthread_mutex_unlock(&philosopher->mut_meals_eaten);
-			break;
-		}
-		pthread_mutex_unlock(&philosopher->mut_meals_eaten);
-
-		// Is sleeping
-		change_philo_state(philosopher, SLEEPING);
-		print_philo_action(philosopher, "is sleeping");
-		sleep_for(data->sleep_time);
+		ft_taken_a_fork(data);
+		ft_is_eating(data);
+		drop_forks(data);
+		ft_is_thinking(data);
+		pthread_mutex_lock(&data->philo->m_death);
+		pthread_mutex_unlock(&data->philo->m_death);
 	}
-
 	return (NULL);
 }

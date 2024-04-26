@@ -14,12 +14,12 @@
 
 int for_one(t_data *data)
 {
-	data->start_time = get_time();
+	ft_usleep(data->start_time);
 	while (1)
 	{
 		if (data->start_time - data->last_meal > data->philo->time_to_die)
 		{
-			printf("%lu %d %s\n", get_time() - data->start_time, data->philo->philo_nbr, DIED);
+			printf("%d %d %s\n", data->start_time, data->philo->philo_nbr, DIED);
 			return (free_all(data));
 		}
 	}
@@ -61,28 +61,11 @@ int parsing_argv(int argc, char **argv)
 	while (argv[i])
 	{
 		tab[i] = ft_atol(argv[i]);
-		if (tab[i] > INT_MAX || tab[i] < INT_MIN)
-			return (free_tab(tab));
+		if (tab[i] >= INT_MAX || tab[i] <= INT_MIN)
+			return (free_tab(tab), EXIT_FAILURE);
 		i++;
 	}
 	return (EXIT_SUCCESS);
-}
-
-static void create_philo_threads(t_data *data)
-{
-	int	i;
-
-	if (!data->philo_ths)
-		return ;
-
-	i = 0;
-	data->philo_ths = malloc(sizeof(pthread_t) * data->nb_philos);
-	while (i < data->nb_philos)
-	{
-		if (pthread_create(&data->philo_ths[i], NULL, philo_routine, &data->philo[i]))
-			exit(1);
-		i++;
-	}
 }
 
 int main(int argc, char **argv)
@@ -100,5 +83,5 @@ int main(int argc, char **argv)
 		return (free(data), EXIT_FAILURE);
 	if (data->philo->philo_nbr == 1)
 		return (for_one(data));
-	pthread_create(data->philo, NULL, philo_routine, data->philo);
+	ft_routine(data);
 }

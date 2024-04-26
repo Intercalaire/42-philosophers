@@ -23,6 +23,7 @@ SRC	= philosophers.c \
 		init.c \
 		utils_2.c \
 		data_clear.c \
+		routine.c \
 
 OBJ	= $(SRC:.c=.o)
 

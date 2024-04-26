@@ -38,6 +38,7 @@ typedef struct s_philo
 	int				time_to_sleep; // time to sleep
 	pthread_mutex_t	*left_fork; // left fork
 	pthread_mutex_t	*right_fork; // right fork
+	pthread_mutex_t	m_death; // mutex death
 }				t_philo;
 
 typedef struct s_data
@@ -48,21 +49,23 @@ typedef struct s_data
 	int				eat_count; // number of meals eaten
 	int				is_eating; // is the philosopher eating
 	int				died; // is the philosopher dead
-	int	start_time; // start time
+	int				start_time; // start time
 	int				nb_philos; // number of philosophers
 	t_philo			*philo; // philosopher
 	pthread_t		*philo_ths; // philosopher threads
+	pthread_mutex_t	write; // mutex write
+	pthread_mutex_t	lock; // mutex 
 }				t_data;
 
-void	*philosopher(void *arg);
-void	*philo_routine(void *arg);
 long	ft_atol(const char *nptr);
 void	*ft_calloc( size_t nmemb, size_t size);
 int		init_philo(t_data *data, char **argv, int argc);
 int		for_one(t_data *data);
-u_int64_t		get_time(void);
+void	*ft_routine(t_data *data);
 int		parsing_argv(int argc, char **argv);
 int		free_all(t_data *data);
-
+void	ft_usleep(int ms);
+long long	timestamp(void);
+int	ft_strcmp(const char *s1, const char *s2);
 
 #endif
