@@ -13,59 +13,68 @@
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-# include <unistd.h>
+# include <limits.h>
 # include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
-# include <limits.h>
 # include <sys/time.h>
-# include <stdint.h>
-# include <stdbool.h>
+# include <unistd.h>
 
-//	philo_msg
-# define TAKE_FORKS "has taken a fork"
-# define THINKING "is thinking *pensive"
-# define SLEEPING "is sleeping *rompich"
-# define EATING "is eating *crunch"
-# define DIED "died :("
-
-typedef struct s_philo
+typedef struct s_fork
 {
-	int				philo_nbr; // nbr of the philosopher and fork
-	int				time_to_die; // time to die
-	int				time_to_eat; // time to eat
-	int				time_to_sleep; // time to sleep
-	pthread_mutex_t	*left_fork; // left fork
-	pthread_mutex_t	*right_fork; // right fork
-	pthread_mutex_t	m_death; // mutex death
-}				t_philo;
+	int				mutex_id;
+	pthread_mutex_t	fork_mutex;
+}					t_fork;
 
 typedef struct s_data
 {
-	int				nb_meals; // number of meals
-	bool			keep_iterating; // keep iterating
-	int				last_meal; // time of the last meal
-	int				eat_count; // number of meals eaten
-	int				is_eating; // is the philosopher eating
-	int				died; // is the philosopher dead
-	int				start_time; // start time
-	int				nb_philos; // number of philosophers
-	t_philo			*philo; // philosopher
-	pthread_t		*philo_ths; // philosopher threads
-	pthread_mutex_t	write; // mutex write
-	pthread_mutex_t	lock; // mutex 
-}				t_data;
+	int				number_of_philosophers;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				nb_of_times_philo_must_eat;
+	int				is_dead;
+	int				philo_satiated;
+	long int		start_time;
+	pthread_mutex_t	is_dead_mutex;
+	pthread_mutex_t	philo_satiated_mutex;
+	pthread_mutex_t	printf_mutex;
+	t_fork			*forks;
+}					t_data;
 
-long	ft_atol(const char *nptr);
-void	*ft_calloc( size_t nmemb, size_t size);
-int		init_philo(t_data *data, char **argv, int argc);
-int		for_one(t_data *data);
-void	*ft_routine(t_data *data);
-int		parsing_argv(int argc, char **argv);
-int		free_all(t_data *data);
-void	ft_usleep(int ms);
-long long	timestamp(void);
-int	ft_strcmp(const char *s1, const char *s2);
+typedef struct s_philo
+{
+	int				id_philo;
+	int				nb_meals_eaten;
+	int				nb_forks;
+	long int		last_time_eaten;
+	pthread_t		thread_id;
+	t_fork			*left_fork;
+	t_fork			*right_fork;
+	t_data			*data;
+}					t_philo;
+
+//main.c
+int				main(int argc, char **argv);
+
+//init.c
+int				initialization_philo(t_philo *philo, t_data *data);
+int				init_data(t_data *data, char **argv);
+int				init_mutex(t_data *data);
+
+
+//parsing.c
+long long		parse_args(char **argv);
+void			*ft_calloc( size_t nmemb, size_t size);
+long long		ft_atol(const char *str);
+
+//time.c
+long int	get_timestamp(long int start);
+long int	get_current_time(void);
+int			ft_usleep(size_t milliseconds);
+
+
+//routine.c
+int				check_ft_routine(t_philo *philo, t_data *data);
 
 #endif

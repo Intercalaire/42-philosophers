@@ -13,17 +13,18 @@
 # Basic variables
 NAME = philosophers
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Werror -Wextra -g
 RM = rm -f
 CLEAR = clear
 
 # Files
 SRC	= philosophers.c \
-		utils.c \
+		parsing.c \
+		ft_calloc.c \
 		init.c \
-		utils_2.c \
-		data_clear.c \
-		routine.c \
+		ft_routine.c \
+		ft_routine_utils.c \
+		time.c \
 
 OBJ	= $(SRC:.c=.o)
 

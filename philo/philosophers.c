@@ -12,76 +12,52 @@
 
 #include "philosophers.h"
 
-int for_one(t_data *data)
+int	main(int argc, char **argv)
 {
-	ft_usleep(data->start_time);
-	while (1)
+	t_philo	*philo;
+	t_data	*data;
+
+	philo = NULL;
+	data = NULL;
+	if (argc != 5 && argc != 6)
 	{
-		if (data->start_time - data->last_meal > data->philo->time_to_die)
-		{
-			printf("%d %d %s\n", data->start_time, data->philo->philo_nbr, DIED);
-			return (free_all(data));
-		}
+		printf("Error: wrong number of arguments\n");
+		return (1);
 	}
-	return (EXIT_SUCCESS);
-}
-
-// void	*philosopher(void *arg)
-// {
-// 	t_philo		*philo;
-// 	pthread_t	monitor;
- 
-// 	philo = (t_philo *)arg;
-// 	philo->last_meal = get_time();
-// 	pthread_create(&monitor, NULL, &monitor_philo, philo);
-// 	pthread_detach(monitor);
-// 	while (1)
-// 	{
-// 		take_forks(philo);
-// 		eat(philo);
-// 		drop_forks(philo);
-// 		sleep_philo(philo); 
-// 	}
-// 	return (NULL);
-// }
-
-static int free_tab(int *tab)
-{
-	free(tab);
-	return (EXIT_FAILURE);
-}
-
-int parsing_argv(int argc, char **argv)
-{
-	int i;
-	int *tab;
-
-	i = 0;
-	tab = (int *)ft_calloc((argc - 1), sizeof(int *));
-	while (argv[i])
-	{
-		tab[i] = ft_atol(argv[i]);
-		if (tab[i] >= INT_MAX || tab[i] <= INT_MIN)
-			return (free_tab(tab), EXIT_FAILURE);
-		i++;
-	}
-	return (EXIT_SUCCESS);
-}
-
-int main(int argc, char **argv)
-{
-	t_data *data;
-
-	data = ft_calloc(1, sizeof(t_data));
+	if (parse_args(argv) == 1)
+		return (1);
+	data = malloc(sizeof(t_data));
 	if (!data)
-		return (EXIT_FAILURE);
-	if (argc < 5 || argc > 6)
-		return (free(data), EXIT_FAILURE);
-	if (parsing_argv(argc, argv) == EXIT_FAILURE)
-		return (free(data), EXIT_FAILURE);
-	if (init_philo(data, argv, argc) == EXIT_FAILURE)
-		return (free(data), EXIT_FAILURE);
-	if (data->philo->philo_nbr == 1)
-		return (for_one(data));
-	ft_routine(data);
+		return (1);
+	if (init_data(data, argv) == -1)
+	{
+		free(data);
+		return (1);
+	}
+	philo = ft_calloc(sizeof(t_philo), data->number_of_philosophers);
+	if (!philo)
+	{
+		free(data->forks);
+		free(data);
+		return (1);
+	}
+	if ((init_mutex(data) == -1) || (initialization_philo(philo, data) == -1))
+	{
+		free(philo);
+		free(data->forks);
+		free(data);
+		return (1);
+	}
+	if (check_ft_routine(philo, data) == -1)
+	{
+		free(philo);
+		free(data->forks);
+		free(data);
+		return (1);
+	}
+	free(philo);
+	free(data->forks);
+	free(data);
+	printf("End of the program\n");
+	return (0);
 }
