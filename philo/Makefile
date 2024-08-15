@@ -21,6 +21,7 @@ CLEAR = clear
 SRC	= philosophers.c \
 		parsing.c \
 		ft_calloc.c \
+		ft_action.c \
 		init.c \
 		ft_routine.c \
 		ft_routine_utils.c \

@@ -32,8 +32,12 @@ int initialization_philo(t_philo *philo, t_data *data)
 		philo[i].id_philo = i + 1;
 		philo[i].nb_meals_eaten = 0;
 		philo[i].nb_forks = 0;
-		philo[i].last_time_eaten = data->is_dead;
+		philo[i].last_time_eaten = data->start_time;
 		philo[i].left_fork = &data->forks[i];
+		data->forks[i].fork_id = i + 1;
+		data->forks[i].is_used = 0;
+		if (pthread_mutex_init(&data->forks->fork_mutex, NULL))
+			return (1);
 		if (philo[i].id_philo == data->number_of_philosophers)
 			philo[i].right_fork = &data->forks[0];
 		else
@@ -54,7 +58,7 @@ int	init_data(t_data *data, char **argv)
 		data->nb_of_times_philo_must_eat = ft_atol(argv[5]);
 	data->is_dead = 0;
 	data->philo_satiated = 0;
-	data->start_time = 0;
+	data->start_time = get_current_time();
 	data->forks = NULL;
 	data->forks = ft_calloc(sizeof(t_fork), data->number_of_philosophers);
 	if (!data->forks)
@@ -64,8 +68,6 @@ int	init_data(t_data *data, char **argv)
 
 int	init_mutex(t_data *data)
 {
-	if (pthread_mutex_init(&data->forks->fork_mutex, NULL))
-		return (1);
 	if (pthread_mutex_init(&data->is_dead_mutex, NULL))
 		return (1);
 	if (pthread_mutex_init(&data->philo_satiated_mutex, NULL))

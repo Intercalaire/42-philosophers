@@ -22,7 +22,8 @@
 
 typedef struct s_fork
 {
-	int				mutex_id;
+	int				fork_id;
+	int				is_used;
 	pthread_mutex_t	fork_mutex;
 }					t_fork;
 
@@ -73,8 +74,14 @@ long int	get_timestamp(long int start);
 long int	get_current_time(void);
 int			ft_usleep(size_t milliseconds);
 
-
 //routine.c
 int				check_ft_routine(t_philo *philo, t_data *data);
+int				check_philo_is_dead(t_philo *philo);
+void			take_forks(t_philo *philo);
+
+//ft_action.c
+void	ft_sleep(t_philo *philo);
+void	ft_think(t_philo *philo);
+void	ft_eat(t_philo *philo, t_data *data);
 
 #endif

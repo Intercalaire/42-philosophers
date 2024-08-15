@@ -58,6 +58,5 @@ int	main(int argc, char **argv)
 	free(philo);
 	free(data->forks);
 	free(data);
-	printf("End of the program\n");
 	return (0);
 }
