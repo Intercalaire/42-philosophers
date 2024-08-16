@@ -73,8 +73,10 @@ static void supervisor_check_death(t_philo *philo, t_data *data)
 	{
 		if (i == data->number_of_philosophers)
 			i = 0;
+		pthread_mutex_lock(&data->philo_satiated_mutex);
 		if (get_current_time() - philo[i].last_time_eaten >= data->time_to_die)
 		{
+			pthread_mutex_unlock(&data->philo_satiated_mutex);
 			pthread_mutex_lock(&data->is_dead_mutex);
 			data->is_dead = 1;
 			pthread_mutex_unlock(&data->is_dead_mutex);
@@ -83,6 +85,7 @@ static void supervisor_check_death(t_philo *philo, t_data *data)
 			pthread_mutex_unlock(&data->printf_mutex);
 			break ;
 		}
+		pthread_mutex_unlock(&data->philo_satiated_mutex);
 		i++;
 	}
 }
@@ -95,8 +98,10 @@ static void supervisor_check_satiated(t_philo *philo, t_data *data)
 	count = 0;
 	while(j < data->number_of_philosophers)
 	{
+		pthread_mutex_lock(&data->philo_satiated_mutex);
 		if (philo[j].nb_meals_eaten == data->nb_of_times_philo_must_eat)
 			count++;
+		pthread_mutex_unlock(&data->philo_satiated_mutex);
 		j++;
 	}
 	pthread_mutex_lock(&data->philo_satiated_mutex);

@@ -26,7 +26,7 @@ void take_forks(t_philo *philo)
 				take_forks_utils(philo, philo->left_fork);
 			pthread_mutex_unlock(&philo->left_fork->fork_mutex);
 			pthread_mutex_lock(&philo->right_fork->fork_mutex);
-			if (check_philo_is_dead(philo) == 0)
+			if (check_philo_is_dead(philo) == 0 && philo->right_fork->is_used == 0)
 				take_forks_utils(philo, philo->right_fork);
 			pthread_mutex_unlock(&philo->right_fork->fork_mutex);
 		}
@@ -42,7 +42,7 @@ void take_forks(t_philo *philo)
 static void	take_forks_more_utils(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->right_fork->fork_mutex);
-	if (check_philo_is_dead(philo) == 0)
+	if (check_philo_is_dead(philo) == 0 && philo->right_fork->is_used == 0)
 		take_forks_utils(philo, philo->right_fork);
 	pthread_mutex_unlock(&philo->right_fork->fork_mutex);
 	pthread_mutex_lock(&philo->left_fork->fork_mutex);

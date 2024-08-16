@@ -11,9 +11,9 @@
 # **************************************************************************** #
 
 # Basic variables
-NAME = philosophers
+NAME = philo
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -g -fsanitize=thread -pthread
 RM = rm -f
 CLEAR = clear
 
