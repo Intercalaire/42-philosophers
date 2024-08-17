@@ -31,6 +31,8 @@ void	*ft_routine(t_philo *philo)
 		if (check_philo_is_dead(philo) == 1)
 			return (NULL);
 		ft_think(philo);
+		if (philo->nb_meals_eaten >= philo->data->nb_of_times_philo_must_eat)
+			break ;
 	}
 	return (NULL);
 }
@@ -48,12 +50,31 @@ int	check_ft_routine(t_philo *philo, t_data *data)
 		i++;
 	}
 	i = 0;
-	while(data->is_dead == 0 && data->philo_satiated
-		!= data->number_of_philosophers)
+	while(1)
 	{
-		supervisor_check_death(philo, data);
-		if (data->nb_of_times_philo_must_eat != 0)
-			supervisor_check_satiated(philo, data);
+		pthread_mutex_lock(&data->is_dead_mutex);
+		if (data->is_dead == 0)
+		{
+			pthread_mutex_unlock(&data->is_dead_mutex);
+			pthread_mutex_lock(&data->philo_satiated_mutex);
+			if (data->philo_satiated != data->number_of_philosophers)
+			{
+				pthread_mutex_unlock(&data->philo_satiated_mutex);
+				supervisor_check_death(philo, data);
+				if (data->nb_of_times_philo_must_eat != 0)
+					supervisor_check_satiated(philo, data);
+			}
+			else
+			{
+				pthread_mutex_unlock(&data->philo_satiated_mutex);
+				break ;
+			}
+		}
+		else
+		{
+			pthread_mutex_unlock(&data->is_dead_mutex);
+			break ;
+		}
 	}
 	while (i < data->number_of_philosophers)
 	{
@@ -99,7 +120,7 @@ static void supervisor_check_satiated(t_philo *philo, t_data *data)
 	while(j < data->number_of_philosophers)
 	{
 		pthread_mutex_lock(&data->philo_satiated_mutex);
-		if (philo[j].nb_meals_eaten == data->nb_of_times_philo_must_eat)
+		if (philo[j].nb_meals_eaten >= data->nb_of_times_philo_must_eat)
 			count++;
 		pthread_mutex_unlock(&data->philo_satiated_mutex);
 		j++;

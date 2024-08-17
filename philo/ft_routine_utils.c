@@ -12,21 +12,23 @@
 
 #include "philosophers.h"
 
-static void take_forks_utils(t_philo *philo, t_fork *fork);
+static void	take_forks_utils(t_philo *philo, t_fork *fork);
 static void	take_forks_more_utils(t_philo *philo);
 
-void take_forks(t_philo *philo)
+void	take_forks(t_philo *philo)
 {
 	while (philo->nb_forks < 2)
 	{
 		if (philo->id_philo % 2 == 0)
 		{
 			pthread_mutex_lock(&philo->left_fork->fork_mutex);
-			if (check_philo_is_dead(philo) == 0 && philo->left_fork->is_used == 0)
+			if (check_philo_is_dead(philo) == 0
+				&& philo->left_fork->is_used == 0)
 				take_forks_utils(philo, philo->left_fork);
 			pthread_mutex_unlock(&philo->left_fork->fork_mutex);
 			pthread_mutex_lock(&philo->right_fork->fork_mutex);
-			if (check_philo_is_dead(philo) == 0 && philo->right_fork->is_used == 0)
+			if (check_philo_is_dead(philo) == 0
+				&& philo->right_fork->is_used == 0)
 				take_forks_utils(philo, philo->right_fork);
 			pthread_mutex_unlock(&philo->right_fork->fork_mutex);
 		}
@@ -51,20 +53,21 @@ static void	take_forks_more_utils(t_philo *philo)
 	pthread_mutex_unlock(&philo->left_fork->fork_mutex);
 }
 
-static void take_forks_utils(t_philo *philo, t_fork *fork)
+static void	take_forks_utils(t_philo *philo, t_fork *fork)
 {
 	philo->nb_forks++;
 	if (philo->nb_forks == 1)
 	{
 		pthread_mutex_lock(&philo->data->printf_mutex);
 		if (check_philo_is_dead(philo) == 0)
-			printf("%ld %d has taken a fork\n", get_timestamp(philo->data->start_time), philo->id_philo);
+			printf("%ld %d has taken a fork\n",
+				get_timestamp(philo->data->start_time), philo->id_philo);
 		pthread_mutex_unlock(&philo->data->printf_mutex);
 		fork->is_used = 1;
 	}
 }
 
-int check_philo_is_dead(t_philo *philo)
+int	check_philo_is_dead(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->data->is_dead_mutex);
 	if (philo->data->is_dead == 1)
@@ -72,15 +75,16 @@ int check_philo_is_dead(t_philo *philo)
 		pthread_mutex_unlock(&philo->data->is_dead_mutex);
 		return (1);
 	}
-	pthread_mutex_unlock(&philo->data->is_dead_mutex);
 	pthread_mutex_lock(&philo->data->philo_satiated_mutex);
 	if (philo->data->nb_of_times_philo_must_eat != 0
 		&& philo->nb_meals_eaten == philo->data->nb_of_times_philo_must_eat)
 	{
 		philo->data->philo_satiated++;
 		pthread_mutex_unlock(&philo->data->philo_satiated_mutex);
+		pthread_mutex_unlock(&philo->data->is_dead_mutex);
 		return (1);
 	}
 	pthread_mutex_unlock(&philo->data->philo_satiated_mutex);
-	return (0);   
+	pthread_mutex_unlock(&philo->data->is_dead_mutex);
+	return (0);
 }

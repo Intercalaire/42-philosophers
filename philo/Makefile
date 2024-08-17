@@ -12,8 +12,8 @@
 
 # Basic variables
 NAME = philo
-CC = cc
 CFLAGS = -Wall -Werror -Wextra -g -fsanitize=thread -pthread
+CC = cc
 RM = rm -f
 CLEAR = clear
 
