@@ -19,7 +19,7 @@ void	take_forks(t_philo *philo)
 {
 	while (philo->nb_forks < 2)
 	{
-		if (philo->id_philo % 2 == 0)
+		if (philo->id_philo == philo->data->number_of_philosophers)
 		{
 			pthread_mutex_lock(&philo->left_fork->fork_mutex);
 			if (check_philo_is_dead(philo) == 0
@@ -57,6 +57,15 @@ static void	take_forks_utils(t_philo *philo, t_fork *fork)
 {
 	philo->nb_forks++;
 	if (philo->nb_forks == 1)
+	{
+		pthread_mutex_lock(&philo->data->printf_mutex);
+		if (check_philo_is_dead(philo) == 0)
+			printf("%ld %d has taken a fork\n",
+				get_timestamp(philo->data->start_time), philo->id_philo);
+		pthread_mutex_unlock(&philo->data->printf_mutex);
+		fork->is_used = 1;
+	}
+	if (philo->nb_forks == 2)
 	{
 		pthread_mutex_lock(&philo->data->printf_mutex);
 		if (check_philo_is_dead(philo) == 0)
