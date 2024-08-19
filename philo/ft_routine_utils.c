@@ -19,7 +19,7 @@ void	take_forks(t_philo *philo)
 {
 	while (philo->nb_forks < 2)
 	{
-		if (philo->id_philo == philo->data->number_of_philosophers)
+		if (philo->id_philo % 2 == 0)
 		{
 			pthread_mutex_lock(&philo->left_fork->fork_mutex);
 			if (check_philo_is_dead(philo) == 0

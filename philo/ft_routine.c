@@ -17,7 +17,6 @@ static void supervisor_check_death(t_philo *philo, t_data *data);
 
 void	*ft_routine(t_philo *philo)
 {
-	// ft_think(philo);
 	if (philo->id_philo % 2 == 0)
 		ft_usleep(50);
 	while (1)
@@ -31,8 +30,6 @@ void	*ft_routine(t_philo *philo)
 		if (check_philo_is_dead(philo) == 1)
 			return (NULL);
 		ft_think(philo);
-		// if (philo->nb_meals_eaten >= philo->data->nb_of_times_philo_must_eat)
-			// break ;
 	}
 	return (NULL);
 }
