@@ -33,7 +33,8 @@ long long	parse_args(char **argv)
 			}
 			j++;
 		}
-		if (ft_atol(argv[i]) <= 0 || ft_atol(argv[i]) > INT_MAX || ft_atol(argv[1]) > 200)
+		if (ft_atol(argv[i]) <= 0 || ft_atol(argv[i]) > INT_MAX
+			|| ft_atol(argv[1]) > 200)
 		{
 			printf("Error: In the arg\n");
 			return (1);

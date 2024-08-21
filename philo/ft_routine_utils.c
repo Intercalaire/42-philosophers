@@ -17,6 +17,7 @@ static void	take_forks_more_utils(t_philo *philo);
 
 void	take_forks(t_philo *philo)
 {
+	usleep(100);
 	while (philo->nb_forks < 2)
 	{
 		if (philo->id_philo % 2 == 0)
@@ -84,16 +85,6 @@ int	check_philo_is_dead(t_philo *philo)
 		pthread_mutex_unlock(&philo->data->is_dead_mutex);
 		return (1);
 	}
-	pthread_mutex_lock(&philo->data->philo_satiated_mutex);
-	if (philo->data->nb_of_times_philo_must_eat != 0
-		&& philo->nb_meals_eaten == philo->data->nb_of_times_philo_must_eat)
-	{
-		philo->data->philo_satiated++;
-		pthread_mutex_unlock(&philo->data->philo_satiated_mutex);
-		pthread_mutex_unlock(&philo->data->is_dead_mutex);
-		return (1);
-	}
-	pthread_mutex_unlock(&philo->data->philo_satiated_mutex);
 	pthread_mutex_unlock(&philo->data->is_dead_mutex);
 	return (0);
 }

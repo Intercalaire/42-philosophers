@@ -12,22 +12,13 @@
 
 #include "philosophers.h"
 
-
-/*
-philo[i].data : Pointeur vers la structure de données commune.
-philo[i].id_philo : Identifiant unique du philosophe (commence à 1).
-philo[i].nb_meals_eaten : Nombre de repas mangés par le philosophe (initialisé à 0).
-philo[i].nb_forks : Nombre de fourchettes détenues par le philosophe (initialisé à 0).
-philo[i].last_time_eaten : Temps du dernier repas (initialisé à data->is_dead).
-philo[i].left_fork : Pointeur vers la fourchette gauche.
-*/
-int initialization_philo(t_philo *philo, t_data *data)
+int	initialization_philo(t_philo *philo, t_data *data)
 {
 	int	i;
 
 	i = 0;
 	while (i < data->number_of_philosophers)
-	{	
+	{
 		philo[i].data = data;
 		philo[i].id_philo = i + 1;
 		philo[i].nb_meals_eaten = 0;
@@ -37,7 +28,7 @@ int initialization_philo(t_philo *philo, t_data *data)
 		data->forks[i].fork_id = i + 1;
 		data->forks[i].is_used = 0;
 		if (pthread_mutex_init(&data->forks->fork_mutex, NULL))
-			return (1);
+			return (-1);
 		if (philo[i].id_philo == data->number_of_philosophers)
 			philo[i].right_fork = &data->forks[0];
 		else
@@ -69,10 +60,10 @@ int	init_data(t_data *data, char **argv)
 int	init_mutex(t_data *data)
 {
 	if (pthread_mutex_init(&data->is_dead_mutex, NULL))
-		return (1);
+		return (-1);
 	if (pthread_mutex_init(&data->philo_satiated_mutex, NULL))
-		return (1);
+		return (-1);
 	if (pthread_mutex_init(&data->printf_mutex, NULL))
-		return (1);
+		return (-1);
 	return (0);
 }

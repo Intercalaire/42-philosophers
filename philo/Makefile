@@ -12,7 +12,7 @@
 
 # Basic variables
 NAME = philo
-CFLAGS = -Wall -Werror -Wextra -g -fsanitize=thread -pthread
+CFLAGS = -Wall -Werror -Wextra -pthread
 CC = cc
 RM = rm -f
 CLEAR = clear
@@ -20,6 +20,7 @@ CLEAR = clear
 # Files
 SRC	= philosophers.c \
 		parsing.c \
+		supervisor.c \
 		ft_calloc.c \
 		ft_action.c \
 		init.c \

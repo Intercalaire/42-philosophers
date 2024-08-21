@@ -55,33 +55,36 @@ typedef struct s_philo
 	t_data			*data;
 }					t_philo;
 
-//main.c
-int				main(int argc, char **argv);
+// main.c
+int					main(int argc, char **argv);
 
-//init.c
-int				initialization_philo(t_philo *philo, t_data *data);
-int				init_data(t_data *data, char **argv);
-int				init_mutex(t_data *data);
+// init.c
+int					initialization_philo(t_philo *philo, t_data *data);
+int					init_data(t_data *data, char **argv);
+int					init_mutex(t_data *data);
 
+// supervisor.c
+int					check_ft_routine(t_philo *philo, t_data *data);
+int					init_threads(t_philo *philo, t_data *data);
 
-//parsing.c
-long long		parse_args(char **argv);
-void			*ft_calloc( size_t nmemb, size_t size);
-long long		ft_atol(const char *str);
+// parsing.c
+long long			parse_args(char **argv);
+void				*ft_calloc(size_t nmemb, size_t size);
+long long			ft_atol(const char *str);
 
-//time.c
-long int	get_timestamp(long int start);
-long int	get_current_time(void);
-int			ft_usleep(size_t milliseconds);
+// time.c
+long int			get_timestamp(long int start);
+long int			get_current_time(void);
+int					ft_usleep(size_t milliseconds);
 
-//routine.c
-int				check_ft_routine(t_philo *philo, t_data *data);
-int				check_philo_is_dead(t_philo *philo);
-void			take_forks(t_philo *philo);
+// routine.c
+int					check_ft_routine(t_philo *philo, t_data *data);
+int					check_philo_is_dead(t_philo *philo);
+void				take_forks(t_philo *philo);
 
-//ft_action.c
-void	ft_sleep(t_philo *philo);
-void	ft_think(t_philo *philo);
-void	ft_eat(t_philo *philo, t_data *data);
+// ft_action.c
+void				ft_sleep(t_philo *philo);
+void				ft_think(t_philo *philo);
+void				ft_eat(t_philo *philo, t_data *data);
 
 #endif
